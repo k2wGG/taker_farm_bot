@@ -2,6 +2,7 @@ import os
 import questionary
 from questionary import Style
 from rich import print
+from auto_run import auto_run_sowing
 
 from modules.wallet_manager import create_wallets_interactive
 from modules.sowing import run_sowing_farm, print_wallet_status, refresh_tokens
@@ -36,9 +37,8 @@ custom_style = Style([
 ])
 
 def main_menu():
-    """Главное интерактивное меню выбора действий."""
     while True:
-        os.system("cls" if os.name == "nt" else "clear")
+        os.system('cls' if os.name == 'nt' else 'clear')
         print_banner()
 
         choice = questionary.select(
@@ -49,14 +49,14 @@ def main_menu():
                 "3. Запустить фарм Sowing",
                 "4. Посмотреть статус всех кошельков (Sowing)",
                 "5. Обновить токены Sowing",
-                "6. Выход"
+                "6. Автозапуск Sowing (каждые 3 часа)",
+                "7. Выход"
             ],
             style=custom_style,
-            instruction=""  # без "(Use arrow keys)"
+            instruction=""
         ).ask()
 
         if not choice:
-            # Если пользователь вдруг Ctrl+C (или Enter без выбора), завершим
             break
 
         if choice.startswith("1"):
@@ -70,6 +70,8 @@ def main_menu():
         elif choice.startswith("5"):
             refresh_tokens()
         elif choice.startswith("6"):
+            auto_run_sowing()  # вызываем функцию автозапуска
+        elif choice.startswith("7"):
             break
 
         input("\nНажмите Enter для возврата в меню...")
